@@ -29,7 +29,6 @@ def setup():
     # Recreate database
     db.drop_all()
     db.create_all()
-    #dishes=[]
     return "Your data has been cleaned!"
 
 
@@ -42,10 +41,7 @@ def add_data():
         food = Food(name=name, cuisine=cuisine, ingredients=ingredients)
         db.session.add(food)
         db.session.commit()
-        #dict={}
-        #dict["name"]=name
-        #dict["cuisine"]=cuisine
-        #dishes.append(dict)
+
         return "Your data has been submitted!"
     return render_template("form.html")
 
@@ -55,9 +51,7 @@ def delete():
         name = request.form["name"]
         db.session.query(Food.name, Food.cuisine, Food.ingredients).filter_by(name=name).delete() 
         db.session.commit()
-        # for d in dishes:
-        #     if d["name"]==name:
-        #         dishes.remove(d)
+
     return render_template("form2.html")
 
 @app.route("/view_data")
@@ -70,7 +64,7 @@ def list_food():
             "cuisine": result[1],
             "ingredients": result[2]
         })
-    # dishes...
+
     return render_template("index_table.html", meal=meal)
 
 @app.route("/ingredient", methods=["GET", "POST"])
@@ -80,18 +74,14 @@ def ingredient():
         results = db.session.query(Food.name, Food.cuisine, Food.ingredients).all()
         meal = []
         for result in results:
-            res=result[2].split(",")
-       
+            res=result[2].split(",")       
             for i in res:
-
                 if i==ingredient:
                     meal.append({
                         "name": result[0],
                         "cuisine": result[1],
                         "ingredients": result[2]
                     })
-
-
         return render_template("index_table.html", meal=meal)
     return render_template("form3.html")
 
